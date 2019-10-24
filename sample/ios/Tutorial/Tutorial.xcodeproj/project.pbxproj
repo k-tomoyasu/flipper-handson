@@ -7,15 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		455B8B789969130954B730DE /* Pods_Tutorial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AD6F694F5AB17BA10252FB0 /* Pods_Tutorial.framework */; };
 		533A2543227B37310071C64B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A2542227B37310071C64B /* AppDelegate.swift */; };
 		533A2545227B37310071C64B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A2544227B37310071C64B /* ViewController.swift */; };
 		533A2548227B37310071C64B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 533A2546227B37310071C64B /* Main.storyboard */; };
 		533A254A227B37320071C64B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 533A2549227B37320071C64B /* Assets.xcassets */; };
 		533A254D227B37320071C64B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 533A254B227B37320071C64B /* LaunchScreen.storyboard */; };
 		533A2556227B3D100071C64B /* MarineMammalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A2555227B3D100071C64B /* MarineMammalCell.swift */; };
+		539F85DD227C84C400550671 /* SeaMammalsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539F85DC227C84C400550671 /* SeaMammalsPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0AD6F694F5AB17BA10252FB0 /* Pods_Tutorial.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tutorial.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F744214001AF9AC23378484 /* Pods-Tutorial.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tutorial.release.xcconfig"; path = "Target Support Files/Pods-Tutorial/Pods-Tutorial.release.xcconfig"; sourceTree = "<group>"; };
 		533A253F227B37310071C64B /* Tutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		533A2542227B37310071C64B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		533A2544227B37310071C64B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,7 +28,9 @@
 		533A254C227B37320071C64B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		533A254E227B37320071C64B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		533A2555227B3D100071C64B /* MarineMammalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarineMammalCell.swift; sourceTree = "<group>"; };
+		539F85DC227C84C400550671 /* SeaMammalsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeaMammalsPlugin.swift; sourceTree = "<group>"; };
 		53E07ED4228C98B0009921FF /* Tutorial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tutorial.entitlements; sourceTree = "<group>"; };
+		AAC7B8BAC91CD5079EEC2023 /* Pods-Tutorial.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tutorial.debug.xcconfig"; path = "Target Support Files/Pods-Tutorial/Pods-Tutorial.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				455B8B789969130954B730DE /* Pods_Tutorial.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +50,8 @@
 			children = (
 				533A2541227B37310071C64B /* Tutorial */,
 				533A2540227B37310071C64B /* Products */,
+				AE26F081C73AB96CEDDDC6F1 /* Pods */,
+				B046DE1CC0D7647F521F877C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,6 +74,7 @@
 				533A2549227B37320071C64B /* Assets.xcassets */,
 				533A254B227B37320071C64B /* LaunchScreen.storyboard */,
 				533A254E227B37320071C64B /* Info.plist */,
+				539F85DC227C84C400550671 /* SeaMammalsPlugin.swift */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -77,6 +87,23 @@
 			path = Cards;
 			sourceTree = "<group>";
 		};
+		AE26F081C73AB96CEDDDC6F1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AAC7B8BAC91CD5079EEC2023 /* Pods-Tutorial.debug.xcconfig */,
+				4F744214001AF9AC23378484 /* Pods-Tutorial.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B046DE1CC0D7647F521F877C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0AD6F694F5AB17BA10252FB0 /* Pods_Tutorial.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -84,6 +111,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 533A2551227B37320071C64B /* Build configuration list for PBXNativeTarget "Tutorial" */;
 			buildPhases = (
+				88BC2CB628E87A57A7541884 /* [CP] Check Pods Manifest.lock */,
 				533A253B227B37310071C64B /* Sources */,
 				533A253C227B37310071C64B /* Frameworks */,
 				533A253D227B37310071C64B /* Resources */,
@@ -148,6 +176,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		88BC2CB628E87A57A7541884 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Tutorial-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		533A253B227B37310071C64B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -156,6 +209,7 @@
 				533A2556227B3D100071C64B /* MarineMammalCell.swift in Sources */,
 				533A2545227B37310071C64B /* ViewController.swift in Sources */,
 				533A2543227B37310071C64B /* AppDelegate.swift in Sources */,
+				539F85DD227C84C400550671 /* SeaMammalsPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +354,7 @@
 		};
 		533A2552227B37320071C64B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AAC7B8BAC91CD5079EEC2023 /* Pods-Tutorial.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -309,7 +364,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-fmodule-map-file=\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit/YogaKit.modulemap\"",
+					"-fmodule-map-file=\"${PODS_ROOT}/Headers/Public/FlipperKit/FlipperKit.modulemap\"",
+					"-fmodule-map-file=\"${PODS_ROOT}/Headers/Public/yoga/Yoga.modulemap\"",
+				);
 				"OTHER_CFLAGS[arch=*]" = "";
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -DFB_SONARKIT_ENABLED -DFSKJF";
 				PRODUCT_BUNDLE_IDENTIFIER = FB.Tutorial;
@@ -321,6 +381,7 @@
 		};
 		533A2553227B37320071C64B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F744214001AF9AC23378484 /* Pods-Tutorial.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
