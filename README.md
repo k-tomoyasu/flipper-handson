@@ -4,6 +4,7 @@ Flipperを導入するとネットワーク通信やレイアウト構造、ス�
 [Flipper公式](https://fbflipper.com/)
 
 ## ハンズオン
+[ハンズオン資料](https://k-tomoyasu.github.io/flipper-handson/index.html)  
 Flipper導入のハンズオン実施のためにmasterブランチはFlipper導入前の状態になっています。
 `installed` ブランチに導入済みのサンプルアプリを置いています。
 サンプルアプリは[公式サンプル](https://github.com/facebook/flipper)に少し手を入れたものとなっています。
