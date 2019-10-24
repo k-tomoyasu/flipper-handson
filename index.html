@@ -1,0 +1,242 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Flipperハンズオン</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id=""
+                  title="Flipperハンズオン"
+                  environment="web"
+                  feedback-link="https://github.com/k-tomoyasu/flipper-handson">
+    
+      <google-codelab-step label="はじめに" duration="5">
+        <h2 class="checklist" is-upgraded>What you&#39;ll learn</h2>
+<ul class="checklist">
+<li>Flipperとは</li>
+<li>AndroidアプリへのFlipper導入</li>
+<li>iOSへのFlipper導入</li>
+</ul>
+<p> このCodelabではモバイルアプリのデバッグツールFlipperを導入して動かすまでをやっていきます。</p>
+<h2 is-upgraded>Flipperとは</h2>
+<p>iOS, Androidで利用できるFaebook製のモバイルアプリデバッグツールです。</p>
+<p>Facebook製なだけあってReact Nativeにも対応しています。</p>
+<p>モバイルアプリの開発効率をガンガン上げるデバッグ機能が盛りだくさんで、以下のようなことができます。</p>
+<ul>
+<li>ログの表示</li>
+<li>ネットワーク通信の表示</li>
+<li>UserDefaultsやSharedPreferencesの表示</li>
+<li>端末内データベースの表示</li>
+<li>レイアウトインスペクタ</li>
+<li>メモリリーク検出<br>など</li>
+</ul>
+<h3 is-upgraded><a href="https://fbflipper.com/" target="_blank">Flipper公式</a></h3>
+<p class="image-container"><img style="width: 602.00px" src="img/b148000e4c6b71f1.png"></p>
+<h2 is-upgraded>Stetho</h2>
+<p>類似のツールにStethoがありますが、こちらもFacebook製で<a href="https://github.com/facebook/flipper/blob/master/docs/stetho.md" target="_blank">FlipperはStathoの後継のような位置づけ</a>になっています。また、StethoはAndroidのみ対応していたのに対して、FlipperはiOSでも使えます</p>
+<h2 is-upgraded>Codelabの成果物</h2>
+<p>このCodelabではサンプルのアプリにFlipperを導入していきます。</p>
+<p>以下のリポジトリの「installed」ブランチに出来上がったものを置いています。</p>
+<ul>
+<li><a href="https://github.com/k-tomoyasu/flipper-handson" target="_blank">https://github.com/k-tomoyasu/flipper-handson</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="準備" duration="3">
+        <h2 is-upgraded>Flipperアプリのインストール</h2>
+<p>Flipperはデスクトップアプリからアプリのデバッグを行うツールです。まずはデスクトップアプリをインストールします。</p>
+<h3 is-upgraded><a href="https://fbflipper.com/" target="_blank">ここからzipを落としてインストールします</a></h3>
+<h2 is-upgraded>サンプルリポジトリをclone</h2>
+<p>この後使うサンプルリポジトリをcloneします</p>
+<pre>git clone git@github.com:k-tomoyasu/flipper-handson.git</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Androidに導入" duration="15">
+        <p>Androidのサンプルプロジェクトに移動して作業を進めます。</p>
+<pre>{project_root}/sample/android</pre>
+<h2 is-upgraded>Flipperライブラリのインストール</h2>
+<p>gradleに設定を追記してFlipperライブラリをダウンロード、インストールします。gradleのdependenciesに追記していきます。</p>
+<p>app/build.gradle<br></p>
+<pre><code>debugImplementation ‘com.facebook.flipper:flipper:0.26.0&#39;
+debugImplementation ‘com.facebook.soloader:soloader:0.8.0&#39;
+
+debugImplementation ‘com.facebook.flipper:flipper-fresco-plugin:0.25.0&#39;
+debugImplementation ‘com.facebook.flipper:flipper-network-plugin:0.26.0&#39;
+
+releaseImplementation ‘com.facebook.flipper:flipper-noop:0.26.0&#39;</code></pre>
+<aside class="warning"><p>現在Networkプラグインを使うにはHTTP通信ライブラリのOkHttpが、Imageプラグインを使うには画像ライブラリのFrescoを導入している必要があります。</p>
+</aside>
+<h2 is-upgraded>Flipperの実装</h2>
+<p>まずはFlipperに必要な初期化を行います。</p>
+<p>TutorialApplication.kt</p>
+<pre><code>SoLoader.init(this, false)
+val flipperClient = AndroidFlipperClient.getInstance(this)</code></pre>
+<p>次にプラグインの初期化に必要なパラメータの生成とプラグインの追加をしていきます。</p>
+<p>TutorialApplication.kt</p>
+<pre><code>val networkFlipperPlugin = NetworkFlipperPlugin()
+// NetworkプラグインはOkhttpのInterceptorにセットする
+Network.client = OkHttpClient.Builder()
+    .addInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
+    .build()
+
+flipperClient.addPlugin(InspectorFlipperPlugin(this, descriptorMapping))
+flipperClient.addPlugin(FrescoFlipperPlugin())
+flipperClient.addPlugin(SharedPreferencesFlipperPlugin(applicationContext))
+flipperClient.addPlugin(networkFlipperPlugin)</code></pre>
+<p>ここでは以下のプラグインを追加しています。</p>
+<ul>
+<li>Layout Inspector</li>
+<li>Network</li>
+<li>Images</li>
+<li>Shared Preferences</li>
+</ul>
+<p>プラグインなので、運用しながら必要に応じて追加・削除(gradle含め)すると良いです。</p>
+<p>最後にデバッグを開始します。</p>
+<p>TutorialApplication.kt</p>
+<pre><code>flipperClient.start()</code></pre>
+<h2 is-upgraded>Flipperアプリ起動</h2>
+<p>サンプルのAndroidアプリをインストール、起動してFlipperアプリを立ち上げると画像のようにアプリのデバッグ情報が表示されます。これで導入完了です。</p>
+<p class="image-container"><img style="width: 602.00px" src="img/b148000e4c6b71f1.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="iOSに導入" duration="15">
+        <p>iOSのサンプルプロジェクトに移動して作業を進めます。</p>
+<pre>{project_root}/sample/ios/Tutorial</pre>
+<h2 is-upgraded>Flipperライブラリのインストール</h2>
+<p>Flipperをcocoapodsでダウンロード、インストールします。pod initし、Podfileを以下のようにします。</p>
+<p>Podfile</p>
+<pre><code>project ‘Tutorial.xcodeproj&#39;
+swift_version = &#34;4.1&#34;
+flipperkit_version = ‘0.26.0&#39;
+use_frameworks!
+
+target ‘Tutorial&#39; do
+  platform :ios, ‘9.0&#39;
+
+  pod ‘FlipperKit&#39;, ‘~&gt;&#39; + flipperkit_version
+  # Layout and network plugins are not yet supported for swift projects
+  pod ‘FlipperKit/FlipperKitLayoutComponentKitSupport&#39;, ‘~&gt;&#39; + flipperkit_version
+  pod ‘FlipperKit/SKIOSNetworkPlugin&#39;, ‘~&gt;&#39; + flipperkit_version
+  pod ‘FlipperKit/FlipperKitUserDefaultsPlugin&#39;, ‘~&gt;&#39; + flipperkit_version
+
+  # If you use `use_frameworks!` in your Podfile,
+  # uncomment the below $static_framework array and also
+  # the pre_install section.  This will cause Flipper and
+  # it&#39;s dependencies to be static and all other pods to
+  # be dynamic.
+  $static_framework = [‘FlipperKit&#39;, ‘Flipper&#39;, ‘Flipper-Folly&#39;,
+    ‘CocoaAsyncSocket&#39;, ‘ComponentKit&#39;, ‘DoubleConversion&#39;,
+    ‘glog&#39;, ‘Flipper-PeerTalk&#39;, ‘Flipper-RSocket&#39;, ‘Yoga&#39;, ‘YogaKit&#39;,
+    ‘CocoaLibEvent&#39;, ‘OpenSSL-Universal&#39;, ‘boost-for-react-native&#39;]
+
+  pre_install do |installer|
+    Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+    installer.pod_targets.each do |pod|
+        if $static_framework.include?(pod.name)
+          def pod.build_type;
+            Pod::Target::BuildType.static_library
+          end
+        end
+      end
+  end
+
+
+  # This post_install hook adds the -DFB_SONARKIT_ENABLED flag to OTHER_SWIFT_FLAGS, necessary to build swift target
+  post_install do |installer|
+    file_name = Dir.glob(&#34;*.xcodeproj&#34;)[0]
+    app_project = Xcodeproj::Project.open(file_name)
+    app_project.native_targets.each do |target|
+        target.build_configurations.each do |config|
+          if (config.build_settings[‘OTHER_SWIFT_FLAGS&#39;])
+            unless config.build_settings[‘OTHER_SWIFT_FLAGS&#39;].include? ‘-DFB_SONARKIT_ENABLED&#39;
+              puts ‘Adding -DFB_SONARKIT_ENABLED ...&#39;
+              swift_flags = config.build_settings[‘OTHER_SWIFT_FLAGS&#39;]
+              if swift_flags.split.last != ‘-Xcc&#39;
+                config.build_settings[‘OTHER_SWIFT_FLAGS&#39;] &lt;&lt; &#39; -Xcc&#39;
+              end
+              config.build_settings[‘OTHER_SWIFT_FLAGS&#39;] &lt;&lt; &#39; -DFB_SONARKIT_ENABLED&#39;
+            end
+          else
+            puts ‘OTHER_SWIFT_FLAGS does not exist thus assigning it to `$(inherited) -Xcc -DFB_SONARKIT_ENABLED`&#39;
+            config.build_settings[‘OTHER_SWIFT_FLAGS&#39;] = ‘$(inherited) -Xcc -DFB_SONARKIT_ENABLED&#39;
+          end
+          app_project.save
+        end
+      end
+      installer.pods_project.save
+  end
+end</code></pre>
+<p>pod installが成功すれば完了です。</p>
+<h2 is-upgraded>Flipperの実装</h2>
+<p>まずはFlipperKitをimportします。</p>
+<p>AppDelegate.swift</p>
+<pre><code>import UIKit
+import FlipperKit</code></pre>
+<p>次にクライアントを初期化します。</p>
+<p>AppDelegate.swift</p>
+<pre><code>let client = FlipperClient.shared()</code></pre>
+<p>そしてプラグインの初期化に必要なパラメータの生成とプラグインの追加をしていきます。</p>
+<p>AppDelegate.swift</p>
+<pre><code>let layoutDescriptorMapper = SKDescriptorMapper(defaults: ())    FlipperKitLayoutComponentKitSupport.setUpWith(layoutDescriptorMapper)
+client?.add(FlipperKitLayoutPlugin(rootNode: application, with: layoutDescriptorMapper!))
+client?.add(FlipperKitNetworkPlugin(networkAdapter: SKIOSNetworkAdapter()))
+client?.add(FKUserDefaultsPlugin.init(suiteName: nil))
+client?.add(SeaMammalsPlugin(MarineMammal.defaultList))
+client?.start()</code></pre>
+<p>ここでは以下のプラグインを追加しています。</p>
+<ul>
+<li>Layout Inspector</li>
+<li>Network</li>
+<li>Images</li>
+<li>Shared Preferences</li>
+</ul>
+<p>プラグインなので、運用しながら必要に応じて追加・削除(Pods含め)すると良いです。</p>
+<p>最後にデバッグを開始します。</p>
+<p>AppDelegate.swift</p>
+<pre><code>client?.start()</code></pre>
+<h2 is-upgraded>Flipperアプリ起動</h2>
+<p>iOSサンプルアプリを起動し、Flipperアプリを立ち上げます。上手くいっていれば画像のようにデバッグ情報が表示されます。これで導入完了です。</p>
+<p class="image-container"><img style="width: 602.00px" src="img/4c30f0f1b5280336.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="最後に" duration="1">
+        <p>デバッグ効果の大きさに比して導入コストが軽いので、とてもコスパの良い改善になると思います。</p>
+<p>また、FlipperはOSSです。仕組みが気になったり、コントリビュートしたくなったりしたら <a href="https://github.com/facebook/flipper" target="_blank">https://github.com/facebook/flipper</a> へ!</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>

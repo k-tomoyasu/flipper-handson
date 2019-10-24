@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-10-24T21:19:10Z",
+  "id": "",
+  "duration": 39,
+  "title": "Flipperハンズオン",
+  "authors": "k-tomoyasu",
+  "summary": "モバイルアプリのでデバッグツールFlipperの導入",
+  "source": "1emIxP8kfHZQVI-o11olDXy_IdAH41xncuPRmwl02dGk",
+  "theme": "mobile",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile",
+    "iOS",
+    "Android"
+  ],
+  "tags": [],
+  "feedback": "https://github.com/k-tomoyasu/flipper-handson",
+  "url": ""
+}
