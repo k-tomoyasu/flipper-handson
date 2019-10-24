@@ -23,7 +23,6 @@ import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 
 class TutorialApplication : Application() {
-    lateinit var httpClient: OkHttpClient
     override fun onCreate() {
         super.onCreate()
 
