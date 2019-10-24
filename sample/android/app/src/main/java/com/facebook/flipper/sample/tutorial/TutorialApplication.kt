@@ -8,7 +8,6 @@
 package com.facebook.flipper.sample.tutorial
 
 import android.app.Application
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.flipper.android.AndroidFlipperClient
@@ -23,7 +22,6 @@ import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 
 class TutorialApplication : Application() {
-    lateinit var httpClient: OkHttpClient
     override fun onCreate() {
         super.onCreate()
 
