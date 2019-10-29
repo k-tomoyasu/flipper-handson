@@ -4,7 +4,6 @@ import android.content.Context
 import android.preference.PreferenceManager
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
-import com.facebook.flipper.core.FlipperClient
 import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
@@ -19,7 +18,7 @@ interface InitializationResult {
 }
 
 object FlipperInitializer {
-    fun initFlipperPlugin(context: Context): InitializationResult {
+    fun initFlipper(context: Context): InitializationResult {
         SoLoader.init(context, false)
 
         val flipperClient = AndroidFlipperClient.getInstance(context)
@@ -45,6 +44,4 @@ object FlipperInitializer {
                         .build()
         }
     }
-
-
 }

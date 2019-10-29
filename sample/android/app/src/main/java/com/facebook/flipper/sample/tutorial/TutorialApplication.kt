@@ -9,7 +9,6 @@ package com.facebook.flipper.sample.tutorial
 
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.litho.config.ComponentsConfiguration
 
 class TutorialApplication : Application() {
@@ -22,7 +21,7 @@ class TutorialApplication : Application() {
         ComponentsConfiguration.isDebugModeEnabled = true
         ComponentsConfiguration.enableRenderInfoDebugging = true
 
-        val initResult = FlipperInitializer.initFlipperPlugin(context = this)
+        val initResult = FlipperInitializer.initFlipper(context = this)
         Network.client = initResult.okHttpClient
     }
 }
