@@ -8,7 +8,7 @@ interface InitializationResult {
 }
 
 object FlipperInitializer {
-    fun initFlipperPlugin(
+    fun initFlipper(
         context: Context
     ): InitializationResult {
         return object : InitializationResult {

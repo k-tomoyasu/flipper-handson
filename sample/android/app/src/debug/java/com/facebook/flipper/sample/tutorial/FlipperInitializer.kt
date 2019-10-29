@@ -21,14 +21,10 @@ object FlipperInitializer {
     fun initFlipper(context: Context): InitializationResult {
         SoLoader.init(context, false)
 
-        val flipperClient = AndroidFlipperClient.getInstance(context)
+        Preferences.pref = PreferenceManager.getDefaultSharedPreferences(context)
         val networkFlipperPlugin = NetworkFlipperPlugin()
         if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(context)) {
-            Network.client = OkHttpClient.Builder()
-                .addInterceptor(FlipperOkhttpInterceptor(NetworkFlipperPlugin()))
-                .build()
-            Preferences.pref = PreferenceManager.getDefaultSharedPreferences(context)
-
+            val flipperClient = AndroidFlipperClient.getInstance(context)
             val descriptorMapping = DescriptorMapping.withDefaults()
             flipperClient.addPlugin(InspectorFlipperPlugin(context, descriptorMapping))
             flipperClient.addPlugin(FrescoFlipperPlugin())
