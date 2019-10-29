@@ -78,13 +78,13 @@
 <h2 is-upgraded>Flipperライブラリのインストール</h2>
 <p>gradleに設定を追記してFlipperライブラリをダウンロード、インストールします。gradleのdependenciesに追記していきます。</p>
 <p>app/build.gradle<br></p>
-<pre><code>debugImplementation ‘com.facebook.flipper:flipper:0.26.0&#39;
-debugImplementation ‘com.facebook.soloader:soloader:0.8.0&#39;
+<pre><code>debugImplementation &#39;com.facebook.flipper:flipper:0.26.0&#39;
+debugImplementation &#39;com.facebook.soloader:soloader:0.8.0&#39;
 
-debugImplementation ‘com.facebook.flipper:flipper-fresco-plugin:0.25.0&#39;
-debugImplementation ‘com.facebook.flipper:flipper-network-plugin:0.26.0&#39;
+debugImplementation &#39;com.facebook.flipper:flipper-fresco-plugin:0.25.0&#39;
+debugImplementation &#39;com.facebook.flipper:flipper-network-plugin:0.26.0&#39;
 
-releaseImplementation ‘com.facebook.flipper:flipper-noop:0.26.0&#39;</code></pre>
+releaseImplementation &#39;com.facebook.flipper:flipper-noop:0.26.0&#39;</code></pre>
 <aside class="warning"><p>現在Networkプラグインを使うにはHTTP通信ライブラリのOkHttpが、Imageプラグインを使うには画像ライブラリのFrescoを導入している必要があります。</p>
 </aside>
 <h2 is-upgraded>Flipperの実装</h2>
@@ -115,6 +115,83 @@ flipperClient.addPlugin(networkFlipperPlugin)</code></pre>
 <p>最後にデバッグを開始します。</p>
 <p>TutorialApplication.kt</p>
 <pre><code>flipperClient.start()</code></pre>
+<h2 is-upgraded>リリースビルド</h2>
+<p>ここまでで、debugビルドが成功するようになっています。しかし、releaseビルドを実行すると参照の解決に失敗してビルドができません。</p>
+<p>これは、releaseビルド用に入れている&#39;flipper-noop&#39;がプラグインに対応していないためです。</p>
+<p>app/build.gradle</p>
+<pre><code>// flipper-noop. releaseビルド時にFlipperを無効にしてコンパイルを通すためにInterfaceの空実装が用意されている
+releaseImplementation &#39;com.facebook.flipper:flipper-noop:0.26.0&#39;</code></pre>
+<p>FlipperのIssueを見ると、メンテナンスとコードサイズの観点からプラグインのnoopは用意しない方針のようです。</p>
+<h3 is-upgraded><a href="https://github.com/facebook/flipper/issues/561" target="_blank">Flipper Issue</a>  </h3>
+<p>代替として、アプリ側の実装でdebugとreleaseのソースを分けてFlipperのコードを集約する方法が推奨されています。</p>
+<h3 is-upgraded>debugビルド時のソースを分ける</h3>
+<p>ビルドタイプに対応したディレクトリを切り、そこにFlipper関連のコードを集約していきます。サンプルプロジェクトのビルドタイプは「debug」、「release」なので「src/debug」、「src/release」ディレクトリを作成します。</p>
+<p>debugの方にTutorialApplicationでやっていたFlipperの初期化・プラグイン追加のコードを移動していきます。</p>
+<p>src/debug/FlipperInitializer.kt</p>
+<pre>interface InitializationResult {
+    val okHttpClient: OkHttpClient
+}
+
+object FlipperInitializer {
+    fun initFlipper(context: Context): InitializationResult {
+        SoLoader.init(context, false)
+
+        val flipperClient = AndroidFlipperClient.getInstance(context)
+        val networkFlipperPlugin = NetworkFlipperPlugin()
+        if (BuildConfig.DEBUG &amp;&amp; FlipperUtils.shouldEnableFlipper(context)) {
+            Network.client = OkHttpClient.Builder()
+                .addInterceptor(FlipperOkhttpInterceptor(NetworkFlipperPlugin()))
+                .build()
+            Preferences.pref = PreferenceManager.getDefaultSharedPreferences(context)
+
+            val descriptorMapping = DescriptorMapping.withDefaults()
+            flipperClient.addPlugin(InspectorFlipperPlugin(context, descriptorMapping))
+            flipperClient.addPlugin(FrescoFlipperPlugin())
+            flipperClient.addPlugin(SharedPreferencesFlipperPlugin(context))
+            flipperClient.addPlugin(networkFlipperPlugin)
+            flipperClient.start()
+        }
+
+        return object : InitializationResult {
+            override val okHttpClient: OkHttpClient
+                get() = OkHttpClient.Builder()
+                        .addInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
+                        .build()
+        }
+    }
+}</pre>
+<p>リリースビルド用の方には空実装を用意します。</p>
+<p>src/release/FlipperInitializer.kt</p>
+<pre>interface InitializationResult {
+    val okHttpClient: OkHttpClient
+}
+
+object FlipperInitializer {
+    fun initFlipper(context: Context): InitializationResult {
+        return object : InitializationResult {
+            override val okHttpClient: OkHttpClient
+                get() = OkHttpClient.Builder()
+                        .build()
+        }
+    }
+}</pre>
+<p>TutorialApplication.ktのFlipper関連コードをFlipperInitializerに置き換えます。</p>
+<p>src/main/TutorialApplication.kt</p>
+<pre>class TutorialApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        Fresco.initialize(this)
+
+        // Normally, you would want to make these dependent on BuildConfig.DEBUG.
+        ComponentsConfiguration.isDebugModeEnabled = true
+        ComponentsConfiguration.enableRenderInfoDebugging = true
+
+        val initResult = FlipperInitializer.initFlipper(context = this)
+        Network.client = initResult.okHttpClient
+    }
+}</pre>
+<p>これでリリースビルドも成功するようになりました。</p>
 <h2 is-upgraded>Flipperアプリ起動</h2>
 <p>サンプルのAndroidアプリをインストール、起動してFlipperアプリを立ち上げると画像のようにアプリのデバッグ情報が表示されます。これで導入完了です。</p>
 <p class="image-container"><img style="width: 602.00px" src="img/b148000e4c6b71f1.png"></p>
